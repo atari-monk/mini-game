@@ -1,14 +1,57 @@
 let flippedCards = [];
 let matchedCards = 0;
-
-// Game settings (you can change these values to define the grid size)
-const rows = 4; // Number of rows
-const columns = 4; // Number of columns
-const totalCards = rows * columns;
 const gameContainer = document.querySelector(".game-container");
+const menuDiv = document.querySelector(".menu");
 
-// Create an array of card values
-function createCards() {
+// Fetch the grid options from the JSON file
+async function fetchGridOptions() {
+    const response = await fetch("grid-options.json");
+    const gridOptions = await response.json();
+    renderMenu(gridOptions);
+}
+
+// Render the grid size options as buttons
+function renderMenu(gridOptions) {
+    gridOptions.forEach((option) => {
+        const button = document.createElement("button");
+        button.classList.add("menu-button");
+        button.dataset.rows = option.rows;
+        button.dataset.columns = option.columns;
+        button.textContent = option.label;
+        button.addEventListener("click", () => {
+            generateGrid(option.rows, option.columns);
+        });
+        menuDiv.appendChild(button);
+    });
+}
+
+// Function to generate and render the grid based on rows and columns
+function generateGrid(rows, columns) {
+    matchedCards = 0;
+    flippedCards = [];
+    gameContainer.innerHTML = ""; // Clear any existing game
+
+    const totalCards = rows * columns;
+    const cardsArray = createCards(totalCards);
+
+    // Set up grid layout dynamically
+    gameContainer.style.gridTemplateColumns = `repeat(${columns}, 100px)`;
+    gameContainer.style.gridTemplateRows = `repeat(${rows}, 100px)`;
+
+    // Create card elements
+    cardsArray.forEach((cardValue) => {
+        const card = document.createElement("div");
+        card.classList.add("card", "hidden");
+        card.dataset.card = cardValue;
+        gameContainer.appendChild(card);
+
+        // Add click event for each card
+        card.addEventListener("click", () => flipCard(card));
+    });
+}
+
+// Function to create the cards array
+function createCards(totalCards) {
     const cardsArray = [];
     const totalPairs = totalCards / 2;
 
@@ -23,27 +66,7 @@ function createCards() {
     return cardsArray;
 }
 
-// Create and display cards on the grid
-function generateGrid() {
-    const cardsArray = createCards();
-
-    // Set up grid layout
-    gameContainer.style.gridTemplateColumns = `repeat(${columns}, 100px)`;
-    gameContainer.style.gridTemplateRows = `repeat(${rows}, 100px)`;
-
-    // Create card elements
-    cardsArray.forEach((cardValue, index) => {
-        const card = document.createElement("div");
-        card.classList.add("card", "hidden");
-        card.dataset.card = cardValue;
-        gameContainer.appendChild(card);
-
-        // Add click event for each card
-        card.addEventListener("click", () => flipCard(card));
-    });
-}
-
-// Flip a card
+// Function to flip a card
 function flipCard(card) {
     if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
         card.classList.add("flipped");
@@ -56,19 +79,19 @@ function flipCard(card) {
     }
 }
 
-// Unflip a card
+// Function to unflip a card
 function unflipCard(card) {
     card.classList.remove("flipped");
     card.innerText = "";
 }
 
-// Check if two flipped cards match
+// Function to check if the two flipped cards match
 function checkMatch() {
     const [firstCard, secondCard] = flippedCards;
 
     if (firstCard.dataset.card === secondCard.dataset.card) {
         matchedCards += 2;
-        if (matchedCards === totalCards) {
+        if (matchedCards === gameContainer.children.length) {
             setTimeout(() => alert("You win! Play again."), 500);
         }
     } else {
@@ -82,4 +105,4 @@ function checkMatch() {
 }
 
 // Initialize the game
-generateGrid();
+fetchGridOptions();

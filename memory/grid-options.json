@@ -1,0 +1,22 @@
+[
+    {
+        "label": "2x4",
+        "rows": 2,
+        "columns": 4
+    },
+    {
+        "label": "3x4",
+        "rows": 3,
+        "columns": 4
+    },
+    {
+        "label": "4x4",
+        "rows": 4,
+        "columns": 4
+    },
+    {
+        "label": "4x6",
+        "rows": 4,
+        "columns": 6
+    }
+]
