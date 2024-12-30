@@ -4,6 +4,7 @@ let isProcessing = false; // Flag to prevent clicks during processing
 const gameContainer = document.querySelector("#game-container");
 const menuDiv = document.querySelector("#menu");
 const gridIndicator = document.querySelector("#grid-indicator");
+const winOverlay = document.querySelector("#win-overlay");
 
 // Fetch the grid options from the JSON file
 async function fetchGridOptions() {
@@ -112,17 +113,14 @@ function checkMatch() {
         matchedCards += 2;
         if (matchedCards === gameContainer.children.length) {
             setTimeout(() => {
-                alert("You win! Play again.");
-                // Hide the grid and show the menu again
-                gameContainer.style.display = "none";
-                document.getElementById("menu").style.display = "block";
-            }, 500);
+                showWinOverlay();
+            }, 1000);
         }
     } else {
         setTimeout(() => {
             unflipCard(firstCard);
             unflipCard(secondCard);
-            updateGridIndicator(true); // Set the indicator back to green when cards are flipped back
+            //updateGridIndicator(true); // Set the indicator back to green when cards are flipped back
         }, 1000); // Delay to give time for player to see both cards
     }
 
@@ -133,6 +131,17 @@ function checkMatch() {
         isProcessing = false; // Re-enable flipping after the delay
         updateGridIndicator(true); // Set the indicator to green (clickable)
     }, 1000); // Time interval to block clicks (1 second)
+}
+
+// Function to show the win overlay
+function showWinOverlay() {
+    winOverlay.style.display = "block";
+    setTimeout(() => {
+        winOverlay.style.display = "none";
+        // Hide the grid and show the menu again
+        gameContainer.style.display = "none";
+        document.getElementById("menu").style.display = "block";
+    }, 2000); // Display the overlay for 2 seconds
 }
 
 // Function to update the state of the grid indicator
