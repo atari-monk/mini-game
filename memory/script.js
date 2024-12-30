@@ -1,5 +1,6 @@
 let flippedCards = [];
 let matchedCards = 0;
+let isProcessing = false; // Flag to prevent clicks during processing
 const gameContainer = document.querySelector("#game-container");
 const menuDiv = document.querySelector("#menu");
 
@@ -31,6 +32,7 @@ function renderMenu(gridOptions) {
 function generateGrid(rows, columns) {
     matchedCards = 0;
     flippedCards = [];
+    isProcessing = false; // Reset flag for new game
     gameContainer.innerHTML = ""; // Clear any existing game
 
     const totalCards = rows * columns;
@@ -73,14 +75,23 @@ function createCards(totalCards) {
 
 // Function to flip a card
 function flipCard(card) {
-    if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
-        card.classList.add("flipped");
-        card.innerText = card.dataset.card;
-        flippedCards.push(card);
+    // Prevent flipping if there are already 2 flipped cards or if the game is processing
+    if (
+        flippedCards.length >= 2 ||
+        card.classList.contains("flipped") ||
+        isProcessing
+    ) {
+        return;
+    }
 
-        if (flippedCards.length === 2) {
-            checkMatch();
-        }
+    card.classList.add("flipped");
+    card.innerText = card.dataset.card;
+    flippedCards.push(card);
+
+    // Check if two cards are flipped
+    if (flippedCards.length === 2) {
+        isProcessing = true; // Block further clicks
+        checkMatch();
     }
 }
 
@@ -104,14 +115,20 @@ function checkMatch() {
                 document.getElementById("menu").style.display = "block";
             }, 500);
         }
+        // No need to unflip, cards stay flipped
     } else {
         setTimeout(() => {
             unflipCard(firstCard);
             unflipCard(secondCard);
-        }, 1000);
+        }, 1000); // Delay to give time for player to see both cards
     }
 
     flippedCards = [];
+
+    // After processing, re-enable the ability to flip cards
+    setTimeout(() => {
+        isProcessing = false; // Re-enable flipping after the delay
+    }, 1000); // Time interval to block clicks (1 second)
 }
 
 // Initialize the game
