@@ -3,6 +3,7 @@ let matchedCards = 0;
 let isProcessing = false; // Flag to prevent clicks during processing
 const gameContainer = document.querySelector("#game-container");
 const menuDiv = document.querySelector("#menu");
+const gridIndicator = document.querySelector("#grid-indicator");
 
 // Fetch the grid options from the JSON file
 async function fetchGridOptions() {
@@ -55,6 +56,7 @@ function generateGrid(rows, columns) {
 
     // Show the game grid
     gameContainer.style.display = "grid";
+    updateGridIndicator(true); // Set the indicator to green initially (clickable)
 }
 
 // Function to create the cards array
@@ -88,9 +90,10 @@ function flipCard(card) {
     card.innerText = card.dataset.card;
     flippedCards.push(card);
 
-    // Check if two cards are flipped
+    // If two cards are flipped, show the red indicator
     if (flippedCards.length === 2) {
-        isProcessing = true; // Block further clicks
+        updateGridIndicator(false); // Show red indicator when cards are being compared
+        isProcessing = true; // Block further clicks until comparison is made
         checkMatch();
     }
 }
@@ -115,11 +118,11 @@ function checkMatch() {
                 document.getElementById("menu").style.display = "block";
             }, 500);
         }
-        // No need to unflip, cards stay flipped
     } else {
         setTimeout(() => {
             unflipCard(firstCard);
             unflipCard(secondCard);
+            updateGridIndicator(true); // Set the indicator back to green when cards are flipped back
         }, 1000); // Delay to give time for player to see both cards
     }
 
@@ -128,7 +131,17 @@ function checkMatch() {
     // After processing, re-enable the ability to flip cards
     setTimeout(() => {
         isProcessing = false; // Re-enable flipping after the delay
+        updateGridIndicator(true); // Set the indicator to green (clickable)
     }, 1000); // Time interval to block clicks (1 second)
+}
+
+// Function to update the state of the grid indicator
+function updateGridIndicator(isClickable) {
+    if (isClickable) {
+        gridIndicator.style.backgroundColor = "green"; // Green circle (clickable)
+    } else {
+        gridIndicator.style.backgroundColor = "red"; // Red circle (blocked)
+    }
 }
 
 // Initialize the game

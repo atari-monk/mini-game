@@ -64,3 +64,14 @@ h1 {
     font-size: 28px;
     margin-bottom: 20px;
 }
+
+#grid-indicator {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: green; /* Start with green (clickable) */
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
