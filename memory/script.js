@@ -1,7 +1,7 @@
 let flippedCards = [];
 let matchedCards = 0;
-const gameContainer = document.querySelector(".game-container");
-const menuDiv = document.querySelector(".menu");
+const gameContainer = document.querySelector("#game-container");
+const menuDiv = document.querySelector("#menu");
 
 // Fetch the grid options from the JSON file
 async function fetchGridOptions() {
@@ -19,6 +19,8 @@ function renderMenu(gridOptions) {
         button.dataset.columns = option.columns;
         button.textContent = option.label;
         button.addEventListener("click", () => {
+            // Hide the menu and show the grid
+            document.getElementById("menu").style.display = "none";
             generateGrid(option.rows, option.columns);
         });
         menuDiv.appendChild(button);
@@ -48,6 +50,9 @@ function generateGrid(rows, columns) {
         // Add click event for each card
         card.addEventListener("click", () => flipCard(card));
     });
+
+    // Show the game grid
+    gameContainer.style.display = "grid";
 }
 
 // Function to create the cards array
@@ -92,7 +97,12 @@ function checkMatch() {
     if (firstCard.dataset.card === secondCard.dataset.card) {
         matchedCards += 2;
         if (matchedCards === gameContainer.children.length) {
-            setTimeout(() => alert("You win! Play again."), 500);
+            setTimeout(() => {
+                alert("You win! Play again.");
+                // Hide the grid and show the menu again
+                gameContainer.style.display = "none";
+                document.getElementById("menu").style.display = "block";
+            }, 500);
         }
     } else {
         setTimeout(() => {
