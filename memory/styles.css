@@ -49,6 +49,7 @@ body {
     border-radius: 10px;
     cursor: pointer;
     user-select: none;
+    z-index: 2;
 }
 
 .card.flipped {
@@ -71,9 +72,10 @@ h1 {
     border-radius: 50%;
     background-color: green; /* Start with green (clickable) */
     position: absolute;
-    top: 180px;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%; /* Center vertically */
+    transform: translate(-50%, -50%); /* Adjust both axes */
+    z-index: 1;
 }
 
 .win-overlay {
