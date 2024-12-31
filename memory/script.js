@@ -56,7 +56,7 @@ function generateGrid(rows, columns) {
     });
 
     // Show the game grid
-    gameContainer.style.display = "grid";
+    document.getElementById("grid-wrapper").style.display = "block";
     updateGridIndicator(true); // Set the indicator to green initially (clickable)
 }
 
@@ -139,7 +139,7 @@ function showWinOverlay() {
     setTimeout(() => {
         winOverlay.style.display = "none";
         // Hide the grid and show the menu again
-        gameContainer.style.display = "none";
+        document.getElementById("grid-wrapper").style.display = "none";
         document.getElementById("menu").style.display = "block";
     }, 2000); // Display the overlay for 2 seconds
 }
