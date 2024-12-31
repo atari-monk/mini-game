@@ -20,18 +20,19 @@ function renderMenu(gridOptions) {
         button.classList.add("menu-button");
         button.dataset.rows = option.rows;
         button.dataset.columns = option.columns;
+        button.dataset.cardSize = option.cardSize; // Store card size in button
         button.textContent = option.label;
         button.addEventListener("click", () => {
             // Hide the menu and show the grid
             document.getElementById("menu").style.display = "none";
-            generateGrid(option.rows, option.columns);
+            generateGrid(option.rows, option.columns, option.cardSize); // Pass card size
         });
         menuDiv.appendChild(button);
     });
 }
 
-// Function to generate and render the grid based on rows and columns
-function generateGrid(rows, columns) {
+// Function to generate and render the grid based on rows, columns, and cardSize
+function generateGrid(rows, columns, cardSize) {
     matchedCards = 0;
     flippedCards = [];
     isProcessing = false; // Reset flag for new game
@@ -41,14 +42,16 @@ function generateGrid(rows, columns) {
     const cardsArray = createCards(totalCards);
 
     // Set up grid layout dynamically
-    gameContainer.style.gridTemplateColumns = `repeat(${columns}, 100px)`;
-    gameContainer.style.gridTemplateRows = `repeat(${rows}, 100px)`;
+    gameContainer.style.gridTemplateColumns = `repeat(${columns}, ${cardSize}px)`;
+    gameContainer.style.gridTemplateRows = `repeat(${rows}, ${cardSize}px)`;
 
     // Create card elements
     cardsArray.forEach((cardValue) => {
         const card = document.createElement("div");
         card.classList.add("card", "hidden");
         card.dataset.card = cardValue;
+        card.style.width = `${cardSize}px`;
+        card.style.height = `${cardSize}px`; // Set dynamic card size
         gameContainer.appendChild(card);
 
         // Add click event for each card
