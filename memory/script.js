@@ -1,3 +1,5 @@
+import { Menu } from "./Menu.js";
+
 let flippedCards = [];
 let matchedCards = 0;
 let isProcessing = false; // Flag to prevent clicks during processing
@@ -6,30 +8,12 @@ const menuDiv = document.querySelector("#menu");
 const gridIndicator = document.querySelector("#grid-indicator");
 const winOverlay = document.querySelector("#win-overlay");
 
-// Fetch the grid options from the JSON file
-async function fetchGridOptions() {
-    const response = await fetch("grid-options.json");
-    const gridOptions = await response.json();
-    renderMenu(gridOptions);
-}
+const menu = new Menu(menuDiv, (option) => {
+    generateGrid(option.rows, option.columns, option.cardSize);
+});
 
-// Render the grid size options as buttons
-function renderMenu(gridOptions) {
-    gridOptions.forEach((option) => {
-        const button = document.createElement("button");
-        button.classList.add("menu-button");
-        button.dataset.rows = option.rows;
-        button.dataset.columns = option.columns;
-        button.dataset.cardSize = option.cardSize; // Store card size in button
-        button.textContent = option.label;
-        button.addEventListener("click", () => {
-            // Hide the menu and show the grid
-            document.getElementById("menu").style.display = "none";
-            generateGrid(option.rows, option.columns, option.cardSize); // Pass card size
-        });
-        menuDiv.appendChild(button);
-    });
-}
+// Fetch and render the menu options
+await menu.fetchGridOptions("grid-options.json");
 
 // Function to generate and render the grid based on rows, columns, and cardSize
 function generateGrid(rows, columns, cardSize) {
@@ -123,7 +107,6 @@ function checkMatch() {
         setTimeout(() => {
             unflipCard(firstCard);
             unflipCard(secondCard);
-            //updateGridIndicator(true); // Set the indicator back to green when cards are flipped back
         }, 1000); // Delay to give time for player to see both cards
     }
 
@@ -143,7 +126,7 @@ function showWinOverlay() {
         winOverlay.style.display = "none";
         // Hide the grid and show the menu again
         document.getElementById("grid-wrapper").style.display = "none";
-        document.getElementById("menu").style.display = "block";
+        menuDiv.style.display = "block";
     }, 2000); // Display the overlay for 2 seconds
 }
 
@@ -155,6 +138,3 @@ function updateGridIndicator(isClickable) {
         gridIndicator.style.backgroundColor = "red"; // Red circle (blocked)
     }
 }
-
-// Initialize the game
-fetchGridOptions();
