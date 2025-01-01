@@ -13,8 +13,10 @@
 
             html,
             body {
-                height: 100%;
+                height: 100%; /* Ensure full screen height */
+                width: 100%; /* Ensure full screen width */
                 font-family: Arial, sans-serif;
+                overflow: hidden; /* Prevent scrollbars */
             }
 
             body {
@@ -22,7 +24,6 @@
                 justify-content: center;
                 align-items: center;
                 background-color: #f7f7f7;
-                overflow: hidden;
             }
 
             .grid-container {
@@ -30,8 +31,8 @@
                 grid-template-columns: repeat(6, 1fr); /* 6 columns */
                 grid-template-rows: repeat(4, 1fr); /* 4 rows */
                 gap: 10px;
-                width: 100vw;
-                height: 100vh;
+                width: 100vw; /* Full width of the viewport */
+                height: 100vh; /* Full height of the viewport */
                 padding: 10px;
             }
 
@@ -98,7 +99,38 @@
             <div class="grid-item">24</div>
         </div>
 
+        <button
+            onclick="goFullScreen()"
+            style="
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                padding: 10px;
+                font-size: 16px;
+                z-index: 1000;
+            "
+        >
+            Go Fullscreen
+        </button>
+
         <script>
+            // Full-screen functionality
+            function goFullScreen() {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    // Firefox
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    // Chrome, Safari
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    // IE/Edge
+                    document.documentElement.msRequestFullscreen();
+                }
+            }
+
+            // Adding click event to each grid item
             document.querySelectorAll(".grid-item").forEach((item) => {
                 item.addEventListener("click", () => {
                     alert("You clicked item " + item.textContent);
