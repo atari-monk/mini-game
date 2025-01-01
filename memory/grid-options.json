@@ -9,12 +9,12 @@
         "label": "4x4",
         "rows": 4,
         "columns": 4,
-        "cardSize": 80
+        "cardSize": 70
     },
     {
         "label": "4x6",
         "rows": 4,
         "columns": 6,
-        "cardSize": 80
+        "cardSize": 50
     }
 ]
