@@ -47,38 +47,6 @@ def create_game_structure(game_name):
         except Exception as e:
             print(f"Error creating file {file_path}: {e}")
 
-    # Update the main index file
-    update_main_index(base_proj_dir, game_name)
-
-def update_main_index(base_proj_dir, game_name):
-    index_file = os.path.join(base_proj_dir, "index.html")
-    project_link = f"<li><a href=\"{game_name}/index.html\">{game_name}</a></li>\n"
-
-    if not os.path.exists(index_file):
-        # Create the index file if it doesn't exist
-        try:
-            with open(index_file, 'w') as file:
-                file.write("<!DOCTYPE html>\n<html>\n<head>\n    <title>Projects Index</title>\n</head>\n<body>\n    <h1>Projects</h1>\n    <ul>\n")
-                file.write(project_link)
-                file.write("    </ul>\n</body>\n</html>")
-            print(f"Created main index file: {index_file}")
-        except Exception as e:
-            print(f"Error creating main index file {index_file}: {e}")
-    else:
-        # Append the new project link if the index file exists
-        try:
-            with open(index_file, 'r+') as file:
-                content = file.read()
-                insertion_point = content.rfind("</ul>")
-                if insertion_point != -1:
-                    updated_content = content[:insertion_point] + project_link + content[insertion_point:]
-                    file.seek(0)
-                    file.write(updated_content)
-                    file.truncate()
-            print(f"Updated main index file with project link: {index_file}")
-        except Exception as e:
-            print(f"Error updating main index file {index_file}: {e}")
-
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python create_game_structure.py <game_name>")
